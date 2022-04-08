@@ -57,6 +57,20 @@ export type AlphaChar =
   | 'Y'
   | 'Z';
 
+export type NumericChar =
+  | '0'
+  | '1'
+  | '2'
+  | '3'
+  | '4'
+  | '5'
+  | '6'
+  | '7'
+  | '8'
+  | '9';
+
+export type AlphaNumericChar = AlphaChar | NumericChar;
+
 /**
  * Method to reduce array of characters.
  *
@@ -529,9 +543,11 @@ export class Random {
    */
   alphaNumeric(
     count: number = 1,
-    options: { bannedChars?: readonly string[] } = {}
+    options: {
+      bannedChars?: readonly LiteralUnion<AlphaNumericChar>[] | string;
+    } = {}
   ): string {
-    const { bannedChars = [] } = options;
+    let { bannedChars = [] } = options;
 
     let charsArray = [
       '0',
@@ -572,7 +588,12 @@ export class Random {
       'z',
     ];
 
-    charsArray = arrayRemove(charsArray, bannedChars);
+    if (bannedChars) {
+      if (typeof bannedChars === 'string') {
+        bannedChars = bannedChars.split('');
+      }
+      charsArray = arrayRemove(charsArray, bannedChars);
+    }
 
     if (charsArray.length === 0) {
       throw new FakerError(
