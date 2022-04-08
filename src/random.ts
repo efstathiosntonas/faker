@@ -1,6 +1,61 @@
 import type { Faker } from '.';
 import { FakerError } from './errors/faker-error';
+import type { LiteralUnion } from './faker';
 import { deprecated } from './internal/deprecated';
+
+export type AlphaChar =
+  | 'a'
+  | 'b'
+  | 'c'
+  | 'd'
+  | 'e'
+  | 'f'
+  | 'g'
+  | 'h'
+  | 'i'
+  | 'j'
+  | 'k'
+  | 'l'
+  | 'm'
+  | 'n'
+  | 'o'
+  | 'p'
+  | 'q'
+  | 'r'
+  | 's'
+  | 't'
+  | 'u'
+  | 'v'
+  | 'w'
+  | 'x'
+  | 'y'
+  | 'z'
+  | 'A'
+  | 'B'
+  | 'C'
+  | 'D'
+  | 'E'
+  | 'F'
+  | 'G'
+  | 'H'
+  | 'I'
+  | 'J'
+  | 'K'
+  | 'L'
+  | 'M'
+  | 'N'
+  | 'O'
+  | 'P'
+  | 'Q'
+  | 'R'
+  | 'S'
+  | 'T'
+  | 'U'
+  | 'V'
+  | 'W'
+  | 'X'
+  | 'Y'
+  | 'Z';
 
 /**
  * Method to reduce array of characters.
@@ -405,7 +460,7 @@ export class Random {
       | {
           count?: number;
           upcase?: boolean;
-          bannedChars?: readonly string[];
+          bannedChars?: readonly LiteralUnion<AlphaChar>[] | string;
         } = {}
   ): string {
     if (typeof options === 'number') {
@@ -413,7 +468,8 @@ export class Random {
         count: options,
       };
     }
-    const { count = 1, upcase = false, bannedChars = [] } = options;
+    const { count = 1, upcase = false } = options;
+    let { bannedChars = [] } = options;
 
     let charsArray = [
       'a',
@@ -443,8 +499,13 @@ export class Random {
       'y',
       'z',
     ];
-
-    charsArray = arrayRemove(charsArray, bannedChars);
+    // TODO @Shinigami92 2022-01-11: A default empty array gets assigned above, we should check the length against 0 or not here
+    if (bannedChars) {
+      if (typeof bannedChars === 'string') {
+        bannedChars = bannedChars.split('');
+      }
+      charsArray = arrayRemove(charsArray, bannedChars);
+    }
 
     let wholeString = '';
     for (let i = 0; i < count; i++) {
