@@ -79,7 +79,7 @@ describe('vehicle', () => {
   }
 
   describe(`random seeded tests for seed ${JSON.stringify(
-    faker.initialSeed
+    faker.seedValue
   )}`, () => {
     for (let i = 1; i <= NON_SEEDED_BASED_RUN; i++) {
       describe('vehicle()', () => {
