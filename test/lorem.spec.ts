@@ -298,8 +298,8 @@ describe('lorem', () => {
 
             const sentences = actual.split('. ');
 
-            expect(sentences.length).greaterThanOrEqual(sentenceCount);
-            expect(sentences.length).lessThanOrEqual(sentenceCount + 3);
+            expect(sentences.length).toBeGreaterThanOrEqual(sentenceCount);
+            expect(sentences.length).toBeLessThanOrEqual(sentenceCount + 3);
           }
         );
       });
