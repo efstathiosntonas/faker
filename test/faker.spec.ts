@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { faker, Faker } from '../src';
 import { FakerError } from '../src/errors/faker-error';
 
@@ -14,8 +14,19 @@ describe('faker', () => {
       locales: { en: { title: 'MyStuff' } },
     });
 
-    expect(myFaker.seedValue).toBeDefined();
-    expect(myFaker.seedValue).toBeTypeOf('number');
+    expect(myFaker.initialSeed).toBeDefined();
+    expect(myFaker.initialSeed).toBeTypeOf('number');
+  });
+
+  it('should log a deprecation warning if accessing seedValue', () => {
+    const spy = vi.spyOn(console, 'warn');
+
+    faker.seedValue;
+
+    expect(spy).toHaveBeenCalledWith(
+      `[@faker-js/faker]: faker.seedValue is deprecated since v6.2.0 and will be removed in v7.0.0. Please use faker.initialSeed instead.`
+    );
+    spy.mockRestore();
   });
 
   it('should throw error if no options passed', () => {
